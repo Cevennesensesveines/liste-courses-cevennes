@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liste de courses - Cévennes en ses veines</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fdf6f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #8B0000;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background-color: #fff;
+      margin-bottom: 0.5rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .checked span {
+      text-decoration: line-through;
+      color: gray;
+    }
+    input[type="text"] {
+      width: 70%;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #8B0000;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🛒 Liste de Courses - Cévennes en ses veines</h1>
+  </header>
+  <main>
+    <div style="margin-bottom: 1rem;">
+      <input id="itemInput" type="text" placeholder="Ajouter un produit...">
+      <button onclick="addItem()">Ajouter</button>
+    </div>
+    <ul id="shoppingList"></ul>
+    <button onclick="clearChecked()" style="margin-top:1rem;background-color:#555;">🧹 Vider les articles cochés</button>
+  </main>
+
+  <script>
+    const input = document.getElementById('itemInput');
+    const list = document.getElementById('shoppingList');
+
+    function saveList() {
+      const items = [];
+      list.querySelectorAll('li').forEach(li => {
+        items.push({
+          name: li.querySelector('span').textContent,
+          checked: li.classList.contains('checked')
+        });
+      });
+      localStorage.setItem('cevennes_list', JSON.stringify(items));
+    }
+
+    function loadList() {
+      const data = localStorage.getItem('cevennes_list');
+      let items = data ? JSON.parse(data) : initialItems;
+      items.sort((a, b) => a.name.localeCompare(b.name));
+      items.forEach(item => addItemToDOM(item.name, item.checked));
+    }
+
+    function addItem() {
+      const text = input.value.trim();
+      if (!text) return;
+      addItemToDOM(text, false);
+      input.value = '';
+      sortAndSave();
+    }
+
+    function addItemToDOM(name, checked) {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.textContent = name;
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = checked;
+      if (checked) li.classList.add('checked');
+      checkbox.addEventListener('change', () => {
+        li.classList.toggle('checked');
+        saveList();
+      });
+      li.appendChild(span);
+      li.appendChild(checkbox);
+      list.appendChild(li);
+    }
+
+    function clearChecked() {
+      list.querySelectorAll('li.checked').forEach(li => li.remove());
+      saveList();
+    }
+
+    function sortAndSave() {
+      const items = [];
+      list.querySelectorAll('li').forEach(li => {
+        items.push({
+          name: li.querySelector('span').textContent,
+          checked: li.classList.contains('checked')
+        });
+      });
+      items.sort((a, b) => a.name.localeCompare(b.name));
+      list.innerHTML = '';
+      items.forEach(item => addItemToDOM(item.name, item.checked));
+      saveList();
+    }
+
+    const initialItems = [
+      {name: "51", checked: false},
+  {name: "AIL", checked: false},
+  {name: "ALLUME BARBECUE", checked: false},
+  {name: "APEROL", checked: false},
+  {name: "ASPERGES", checked: false},
+  {name: "AUBERGINES", checked: false},
+  {name: "BALLANTINE’S", checked: false},
+  {name: "BASILIC", checked: false},
+  {name: "BEURRE", checked: false},
+  {name: "BIB BLANC", checked: false},
+  {name: "BIB ROSE", checked: false},
+  {name: "BIB ROUGE", checked: false},
+  {name: "BOEUF", checked: false},
+  {name: "CAFE", checked: false},
+  {name: "CAROTTES", checked: false},
+  {name: "CHOCOLAT NOIR", checked: false},
+  {name: "CIBOULETTE", checked: false},
+  {name: "CITRON JAUNE", checked: false},
+  {name: "CITRON VERT", checked: false},
+  {name: "COCA 0", checked: false},
+  {name: "COCA BOUTEILLE", checked: false},
+  {name: "COCA CANETTE", checked: false},
+  {name: "CORIANDRE", checked: false},
+  {name: "CORNICHON", checked: false},
+  {name: "COULIS FRUITS", checked: false},
+  {name: "COURGETTES", checked: false},
+  {name: "CREME", checked: false},
+  {name: "CREME CASSIS", checked: false},
+  {name: "CREME CHATAIGNE", checked: false},
+  {name: "CREME FR 35 %", checked: false},
+  {name: "CREME MARRON", checked: false},
+  {name: "DON PAPA", checked: false},
+  {name: "EPONGES", checked: false},
+  {name: "FARINE PATISSERIE", checked: false},
+  {name: "FRAISES", checked: false},
+  {name: "FROMAGE RAPE", checked: false},
+  {name: "FROMAGES", checked: false},
+  {name: "GAZ BRULEUR", checked: false},
+  {name: "GET", checked: false},
+  {name: "HAVANA", checked: false},
+  {name: "HUILE FRITURE", checked: false},
+  {name: "HUILE OLIVE", checked: false},
+  {name: "HUILE RAISIN", checked: false},
+  {name: "ICE TEA", checked: false},
+  {name: "JACK DANIEL’S", checked: false},
+  {name: "JAVEL SOL", checked: false},
+  {name: "JAVEL SPRAY", checked: false},
+  {name: "JUS ABRICOT", checked: false},
+  {name: "JUS ANANAS BOUT", checked: false},
+  {name: "JUS ANANAS INDIV", checked: false},
+  {name: "JUS MULTIFRUIT", checked: false},
+  {name: "JUS POMME BOUT", checked: false},
+  {name: "JUS POMME INDIV", checked: false},
+  {name: "LAIT ENTIER", checked: false},
+  {name: "LEVURE", checked: false},
+  {name: "LIMONADE", checked: false},
+  {name: "LIMONADE ART.", checked: false},
+  {name: "LIMONCELLO", checked: false},
+  {name: "MAIZENA", checked: false},
+  {name: "MARTINI BLANC", checked: false},
+  {name: "MARTINI ROUGE", checked: false},
+  {name: "MOULES PELOUS", checked: false},
+  {name: "MOUTARDE", checked: false},
+  {name: "NETTOYANT SOL", checked: false},
+  {name: "NETTOYANT WC", checked: false},
+  {name: "NOCCIOLATA", checked: false},
+  {name: "NOILLY PRAT", checked: false},
+  {name: "OIGNON", checked: false},
+  {name: "ORANGE", checked: false},
+  {name: "PATES LASAGNES", checked: false},
+  {name: "PATES TARTES", checked: false},
+  {name: "PELARDONS", checked: false},
+  {name: "PERSIL", checked: false},
+  {name: "PICON", checked: false},
+  {name: "POIRE", checked: false},
+  {name: "POIRES", checked: false},
+  {name: "POIVRE", checked: false},
+  {name: "POIVRONS", checked: false},
+  {name: "POMME DE TERRE", checked: false},
+  {name: "POMMES", checked: false},
+  {name: "PORC", checked: false},
+  {name: "POULET", checked: false},
+  {name: "RICARD", checked: false},
+  {name: "SAC POUBELLE 100L", checked: false},
+  {name: "SALADE", checked: false},
+  {name: "SALADE FRISEE", checked: false},
+  {name: "SEL", checked: false},
+  {name: "SERVIETTES", checked: false},
+  {name: "SIROP", checked: false},
+  {name: "SPRAY GRAISSE", checked: false},
+  {name: "SUCRE FIN", checked: false},
+  {name: "SUCRE MORCEAUX", checked: false},
+  {name: "SUZE", checked: false},
+  {name: "THYM", checked: false},
+  {name: "VANILLE", checked: false},
+  {name: "VEAU", checked: false},
+  {name: "VERVEINE", checked: false}
+    ];
+
+    loadList();
+  </script>
+</body>
+</html>
